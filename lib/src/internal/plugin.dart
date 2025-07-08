@@ -471,7 +471,7 @@ class PhotoManagerPlugin with BasePlugin, IosPlugin, AndroidPlugin, OhosPlugin {
     PMDarwinAVFileType? darwinFileType,
   }) async {
     if (Platform.isIOS || Platform.isMacOS) {
-      return await _channel.invokeMethod(
+      final title = await _channel.invokeMethod(
         PMConstants.mGetTitleAsync,
         <String, dynamic>{
           'id': entity.id,
@@ -480,6 +480,7 @@ class PhotoManagerPlugin with BasePlugin, IosPlugin, AndroidPlugin, OhosPlugin {
           'darwinFileType': darwinFileType?.value ?? 0,
         },
       );
+      return title ?? '';
     }
     return entity.title ?? '';
   }
@@ -854,11 +855,7 @@ mixin OhosPlugin on BasePlugin {
 }
 
 void _throwIfOrientationInvalid(int? value) {
-  if (value == null ||
-      value == 0 ||
-      value == 90 ||
-      value == 180 ||
-      value == 270) {
+  if (value == null || value == 0 || value == 90 || value == 180 || value == 270) {
     return;
   }
   throw ArgumentError(
